@@ -82,7 +82,7 @@ public class RoomServiceImpl implements RoomService {
                 .findById(roomId)
                 .orElseThrow(() -> new ResourceNotFoundException("Oda bulunamadı. ID: " + roomId));
 
-        inventoryService.deleteFutureInventories(room);
+        inventoryService.deleteAllInventories(room);
 
         roomRepository.deleteById(roomId);
 
