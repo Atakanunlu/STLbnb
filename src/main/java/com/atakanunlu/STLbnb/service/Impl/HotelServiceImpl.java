@@ -5,6 +5,7 @@ import com.atakanunlu.STLbnb.entity.Hotel;
 import com.atakanunlu.STLbnb.entity.Room;
 import com.atakanunlu.STLbnb.exception.ResourceNotFoundException;
 import com.atakanunlu.STLbnb.repository.HotelRepository;
+import com.atakanunlu.STLbnb.repository.RoomRepository;
 import com.atakanunlu.STLbnb.service.HotelService;
 import com.atakanunlu.STLbnb.service.InventoryService;
 import jakarta.transaction.Transactional;
@@ -21,6 +22,7 @@ public class HotelServiceImpl implements HotelService {
     private final HotelRepository hotelRepository;
     private final ModelMapper modelMapper;
     private final InventoryService inventoryService;
+    private final RoomRepository roomRepository;
 
     @Override
     public HotelDto createNewHotel(HotelDto hotelDto) {
@@ -74,11 +76,11 @@ public class HotelServiceImpl implements HotelService {
         Hotel hotel = hotelRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("Hotel bulunamadı. ID: "+id));
 
-        hotelRepository.deleteById(id);
         for (Room room: hotel.getRooms()){
-            inventoryService.deleteFutureInventories(room);
+            inventoryService.deleteAllInventories(room);
+            roomRepository.deleteById(room.getId());
         }
-
+        hotelRepository.deleteById(id);
     }
 
     @Override
