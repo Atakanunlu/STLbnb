@@ -1,6 +1,8 @@
 package com.atakanunlu.STLbnb.service.Impl;
 
 import com.atakanunlu.STLbnb.dto.HotelDto;
+import com.atakanunlu.STLbnb.dto.HotelInfoDto;
+import com.atakanunlu.STLbnb.dto.RoomDto;
 import com.atakanunlu.STLbnb.entity.Hotel;
 import com.atakanunlu.STLbnb.entity.Room;
 import com.atakanunlu.STLbnb.exception.ResourceNotFoundException;
@@ -13,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -102,6 +106,20 @@ public class HotelServiceImpl implements HotelService {
             inventoryService.initializeRoomForAYear(room);
         }
 
+    }
+
+    @Override
+    public HotelInfoDto getHotelInfoById(Long hotelId) {
+
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(()-> new ResourceNotFoundException("Hotel bulunamadı. id: "+hotelId));
+
+        List<RoomDto> rooms = hotel.getRooms()
+                .stream()
+                .map(room -> modelMapper.map(room,RoomDto.class))
+                .toList();
+
+        return new HotelInfoDto(modelMapper.map(hotel,HotelDto.class),rooms);
     }
 
 

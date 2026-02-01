@@ -1,5 +1,10 @@
 package com.atakanunlu.STLbnb.entity.enums;
 
 public enum BookingStatus {
-    RESERVED,CONFIRMED,CANCELLED
+    RESERVED,
+    GUEST_ADDED,
+    PAYMENTS_PENDING,
+    CONFIRMED,
+    CANCELLED,
+    EXPIRED
 }
