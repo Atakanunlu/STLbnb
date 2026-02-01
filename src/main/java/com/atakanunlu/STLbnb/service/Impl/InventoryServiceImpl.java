@@ -1,6 +1,7 @@
 package com.atakanunlu.STLbnb.service.Impl;
 
 import com.atakanunlu.STLbnb.dto.HotelDto;
+import com.atakanunlu.STLbnb.dto.HotelInfoDto;
 import com.atakanunlu.STLbnb.dto.HotelSearchRequest;
 import com.atakanunlu.STLbnb.entity.Hotel;
 import com.atakanunlu.STLbnb.entity.Inventory;
@@ -40,6 +41,7 @@ public class InventoryServiceImpl implements InventoryService {
                     .hotel(room.getHotel())
                     .room(room)
                     .bookedCount(0)
+                    .reservedCount(0)
                     .city(room.getHotel().getCity())
                     .date(today)
                     .totalCount(room.getTotalCount())
@@ -55,11 +57,17 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public void deleteAllInventories(Room room) {
+        log.info("Deleting the room invontories of room with id: {}",room.getId());
         inventoryRepository.deleteByRoom(room);
     }
 
     @Override
     public Page<HotelDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
+
+        log.info("Searching hotels for {} city, from {} to {}",
+                hotelSearchRequest.getCity(),
+                hotelSearchRequest.getStartDate(),
+                hotelSearchRequest.getEndDate());
 
         Pageable pageable = PageRequest.of(hotelSearchRequest.getPage(), hotelSearchRequest.getSize());
 
